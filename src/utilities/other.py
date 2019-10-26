@@ -3,6 +3,7 @@ import joblib
 import boto3
 import os
 import re
+from tempfile import TemporaryDirectory
 
 
 def split_s3_uri(uri):
@@ -19,8 +20,11 @@ def download_directory(uri, dst, dst_exist_ok=True):
     s3 = boto3.resource('s3')
     bucket_obj = s3.Bucket(bucket)
     for obj in bucket_obj.objects.filter(Prefix=key):
-        _, fname = os.path.split(obj.key)
-        bucket_obj.download_file(obj.key, os.path.join(dst, fname))
+        if obj.key.endswith('/'):
+            continue  # Skip over fileless items returned.
+        else:
+            _, fname = os.path.split(obj.key)
+            bucket_obj.download_file(obj.key, os.path.join(dst, fname))
     return 
 
 
@@ -39,4 +43,4 @@ def save_model(obj, uri):
     with TemporaryDirectory() as tmpdir:
         tmpfile = os.path.join(tmpdir, 'model.joblib')
         joblib.dump(obj, tmpfile)
-        s3.upload_file(tmpfile, bucket, f"{key}/model.joblib")
+        s3.upload_file(tmpfile, bucket, f"{key}model.joblib")

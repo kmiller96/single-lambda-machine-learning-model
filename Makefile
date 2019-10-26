@@ -1,6 +1,6 @@
 build:
-	cp src/utilities src/training/utilities -r
-	cp src/utilities src/inference/utilities -r
+	cp src/utilities src/training/ -r
+	cp src/utilities src/inference/ -r
 
 tests: build 
 	python -m pytest test/
