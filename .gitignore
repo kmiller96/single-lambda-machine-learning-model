@@ -1,3 +1,5 @@
 __pycache__/
 .chalice/deployments/
 .chalice/venv/
+**/training/utilities/
+**/inference/utilities/
