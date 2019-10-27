@@ -1,5 +1,8 @@
 import os
-from . import utilities
+try: 
+    import utilities
+except ModuleNotFoundError:  # Happpens when calling pytest.
+    from . import utilities
 
 DATA_BUCKET = os.environ['DATA_BUCKET']
 DATA_PREFIX = os.environ['DATA_PREFIX']

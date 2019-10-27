@@ -6,3 +6,5 @@ build/
 **/.terraform/*
 *.tfstate
 *.tfstate.*
+
+.cache/
