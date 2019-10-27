@@ -6,5 +6,3 @@ build/
 **/.terraform/*
 *.tfstate
 *.tfstate.*
-**/tfn/static/terraform.tfvars
-**/tfn/dynamic/terraform.tfvars

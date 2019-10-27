@@ -5,7 +5,7 @@ resource_name_prefix = "adss-single-model-"
 iam_role_name = "lambda-iam"
 
 ## S3 Configuration ##
-bucket_name = "adss-single-lambda"
+bucket_name = "adss-single-lambda-terraform"
 source_key_prefix = "source"
 
 ## Training Lambda ##
