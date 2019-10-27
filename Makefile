@@ -28,7 +28,10 @@ build: build-utilities build-training build-inference
 push: build
 	aws s3 cp build/training.zip s3://adss-single-lambda/source/training.zip
 	aws s3 cp build/inference.zip s3://adss-single-lambda/source/inference.zip
-deploy: build
+terraform-sync:
+	cp tfn/terraform.tfvars tfn/dynamic/terraform.tfvars
+	cp tfn/terraform.tfvars tfn/static/terraform.tfvars
+deploy: build terraform-sync
 	cd tfn && terraform apply
 delete:
 	cd tfn && terraform destroy
