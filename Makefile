@@ -1,3 +1,5 @@
+HOME=$(pwd)
+
 ####################
 ## Build Commands ##
 ####################
@@ -6,19 +8,21 @@ build-utilities:
 	cp src/utilities src/training/ -r
 	cp src/utilities src/inference/ -r
 build-training: build-utilities
-	rm /tmp/training -rf && \
-	mkdir -p ./build
-	cp -r src/training /tmp/training && \
-	pip install -r /tmp/training/requirements.txt -t /tmp/training && \
-	rm /tmp/training/*.dist-info /tmp/training/__pycache__/ -rf
-	zip -r build/training.zip /tmp/training
+	rm ./build/training -rf && \
+	mkdir -p ./build && \
+	cp -r ./src/training ./build/training && \
+	pip install -r ./build/training/requirements.txt -t ./build/training && \
+	rm ./build/training/*.dist-info ./build/training/__pycache__/ -rf && \
+	cd ./build/training && \
+	zip -r ../training.zip .
 build-inference: build-utilities
-	rm /tmp/inference -rf && \
-	mkdir -p ./build
-	cp -r src/inference /tmp/inference && \
-	pip install -r /tmp/inference/requirements.txt -t /tmp/inference && \
-	rm /tmp/inference/*.dist-info /tmp/inference/__pycache__/ -rf && \
-	zip -r build/inference.zip /tmp/inference
+	rm ./build/inference -rf && \
+	mkdir -p ./build && \
+	cp -r ./src/inference ./build/inference && \
+	pip install -r ./build/inference/requirements.txt -t ./build/inference && \
+	rm ./build/inference/*.dist-info ./build/inference/__pycache__/ -rf && \
+	cd ./build/inference && \
+	zip -r ../inference.zip .
 build: build-utilities build-training build-inference
 
 #########################
