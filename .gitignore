@@ -1,3 +1,10 @@
 __pycache__/
-.chalice/deployments/
-.chalice/venv/
+**/training/utilities/
+**/inference/utilities/
+build/
+
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+
+.cache/

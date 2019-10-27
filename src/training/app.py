@@ -1,29 +1,39 @@
-from chalice import Chalice
+import os
+try: 
+    import utilities
+except ModuleNotFoundError:  # Happpens when calling pytest.
+    from . import utilities
 
-app = Chalice(app_name='training')
+DATA_BUCKET = os.environ['DATA_BUCKET']
+DATA_PREFIX = os.environ['DATA_PREFIX']
+DATA_TMP_DST = '/tmp/data/'
+
+MODEL_BUCKET = os.environ['MODEL_BUCKET']
+MODEL_PREFIX = os.environ['MODEL_PREFIX']
 
 
-@app.route('/')
-def index():
-    return {'hello': 'world'}
+def train(event, context):
+    """Trains our ML model."""
+    utilities.download_directory(uri=f"s3://{DATA_BUCKET}/{DATA_PREFIX}", dst=DATA_TMP_DST)
+    df = utilities.read_csv_directory(DATA_TMP_DST)
+    print(f"SHAPE: {df.shape}")
 
+    train, test = utilities.train_test_split(df)
+    X_train, y_train = utilities.Xy_split(train, target='y')
+    X_test, y_test = utilities.Xy_split(test, target='y')
 
-# The view function above will return {"hello": "world"}
-# whenever you make an HTTP GET request to '/'.
-#
-# Here are a few more examples:
-#
-# @app.route('/hello/{name}')
-# def hello_name(name):
-#    # '/hello/james' -> {"hello": "james"}
-#    return {'hello': name}
-#
-# @app.route('/users', methods=['POST'])
-# def create_user():
-#     # This is the JSON body the user sent in their POST request.
-#     user_as_json = app.current_request.json_body
-#     # We'll echo the json body back to the user in a 'user' key.
-#     return {'user': user_as_json}
-#
-# See the README documentation for more examples.
-#
+    X_train = utilities.preprocessing.preprocess(X_train)
+    X_test = utilities.preprocessing.preprocess(X_test)
+
+    model = utilities.Model()
+    model.fit(X_train, y_train)
+
+    y_hat = model.predict(X_test)
+    eval_results = utilities.evaluate(y_actual=y_test, y_predict=y_hat)
+
+    utilities.save_model(obj=model, uri=f"s3://{DATA_BUCKET}/{MODEL_PREFIX}")
+    return {
+        "status": "success",
+        "results": eval_results,
+    }
+
