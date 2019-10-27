@@ -80,6 +80,14 @@ resource "aws_lambda_function" "training_lambda" {
     s3_bucket = var.bucket_name
     s3_key = "${var.source_key_prefix}/training.zip"
 
+    environment {
+        variables = {
+            DATA_BUCKET = var.bucket_name
+            DATA_PREFIX = "train/"
+            MODEL_BUCKET = var.bucket_name
+            MODEL_PREFIX = "model/"
+        }
+    }
 }
 
 

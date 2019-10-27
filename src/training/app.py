@@ -1,11 +1,12 @@
+import os
 from . import utilities
 
-DATA_BUCKET = 'adss-single-lambda'
-DATA_PREFIX = 'train/'
+DATA_BUCKET = os.environ['DATA_BUCKET']
+DATA_PREFIX = os.environ['DATA_PREFIX']
 DATA_TMP_DST = '/tmp/data/'
 
-MODEL_BUCKET = 'adss-single-lambda'
-MODEL_PREFIX = 'model/'
+MODEL_BUCKET = os.environ['MODEL_BUCKET']
+MODEL_PREFIX = os.environ['MODEL_PREFIX']
 
 
 def train(event, context):
