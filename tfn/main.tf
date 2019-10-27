@@ -22,7 +22,7 @@ resource "aws_s3_bucket" "this" {
 ###############
 
 resource "aws_iam_role_policy" "single_bucket_full_access" {
-  name = "test_policy"
+  name = "single_bucket_full_access"
   role = "${aws_iam_role.lambda_iam.id}"
 
   policy = <<EOF
@@ -40,6 +40,28 @@ resource "aws_iam_role_policy" "single_bucket_full_access" {
       ]
     }
   ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "lambda_logging_policy" {
+  name = "lambda_logging"
+  role = "${aws_iam_role.lambda_iam.id}"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "*"
+        }
+    ]
 }
 EOF
 }
