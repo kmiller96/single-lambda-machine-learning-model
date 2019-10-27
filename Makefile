@@ -31,10 +31,18 @@ push: build
 terraform-sync:
 	cp tfn/terraform.tfvars tfn/dynamic/terraform.tfvars
 	cp tfn/terraform.tfvars tfn/static/terraform.tfvars
-deploy: build terraform-sync
-	cd tfn && terraform apply
-delete:
-	cd tfn && terraform destroy
+
+deploy-static: build terraform-sync
+	cd tfn/static && terraform apply
+deploy-dynamic: build terraform-sync
+	cd tfn/dynamic && terraform apply
+deploy-all: deploy-static deploy-dynamic
+
+delete-static:
+	cd tfn/static && terraform destroy
+delete-dynamic:
+	cd tfn/dynamic && terraform destroy
+destroy-all: delete-static delete-dynamic
 
 ####################
 ## Other Commands ##
